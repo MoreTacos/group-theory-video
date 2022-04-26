@@ -1,5 +1,36 @@
 from manim import *
 
+class Thumbnail(Scene):
+    def construct(self):
+        grouptheory = MathTex(r"\text{Group Theory}").scale(2.4).move_to(UP*2.8)
+
+        t1 = TriangleGroup(color=BLUE).with_top().scale(1.15)
+        t1.submobjects[0].color = YELLOW
+        
+        t2 = TriangleGroup(color=GREEN).with_do_nothing().scale(1.15)
+        t2.submobjects[0].color = YELLOW
+
+        t3 = TriangleGroup(color=BLUE).with_rotate120().scale(1.15)
+        t3.submobjects[0].color = YELLOW
+
+        t4 = TriangleGroup(color=GREEN).with_rotate240().scale(1.15)
+        t4.submobjects[0].color = YELLOW
+
+        t5 = TriangleGroup(color=BLUE).with_right().scale(1.15)
+        t5.submobjects[0].color = YELLOW
+
+        t6 = TriangleGroup(color=GREEN).with_left().scale(1.15)
+        t6.submobjects[0].color = YELLOW
+
+        l1 = VGroup(t1, t2, t3).arrange(RIGHT, LARGE_BUFF * 2)
+        l2 = VGroup(t4, t5, t6).arrange(RIGHT, LARGE_BUFF * 2)
+
+        l1.next_to(grouptheory, DOWN, LARGE_BUFF * 0.7)
+        l2.next_to(l1, DOWN, MED_LARGE_BUFF)
+
+        self.add(grouptheory, l1, l2)
+        self.wait(3)
+
 class Scene0(Scene):
     def construct(self):
         self.wait(1)
@@ -31,11 +62,33 @@ class Scene0(Scene):
             Square(1, color=green4, fill_opacity=1),
         ).arrange(DOWN)
 
-        logo = VGroup(l1, l2, l3, l4).arrange(RIGHT).move_to(ORIGIN + UP)
+        logo = VGroup(l1, l2, l3, l4).arrange(RIGHT).move_to(ORIGIN + UP).scale(0.8)
 
-        t1 = MathTex(r"\text{Davide Radaelli}").scale(2)
+        t1 = MathTex(r"\text{Davide Radaelli}").scale(2.4)
         t1.next_to(logo, DOWN)
-        self.play(Create(logo), Write(t1), run_time=3)
+        p1 = np.array((l1.get_bottom()[0], t1.get_top()[1] + 0.8, 0))
+        p2 = np.array((l2.get_bottom()[0], t1.get_top()[1] + 0.8, 0))
+        p3 = np.array((l3.get_bottom()[0], t1.get_top()[1] + 0.8, 0))
+        p4 = np.array((l4.get_bottom()[0], t1.get_top()[1] + 0.8, 0))
+        l1.move_to(p1, aligned_edge=DOWN)
+        l2.move_to(p2, aligned_edge=DOWN)
+        l3.move_to(p3, aligned_edge=DOWN)
+        l4.move_to(p4, aligned_edge=DOWN)
+        VGroup(l1, l2, l3, l4, t1).move_to(ORIGIN)
+        self.play(AnimationGroup(
+            Write(t1, run_time=5),
+            Create(l1.submobjects[0], run_time=3),
+            Create(l1.submobjects[1], run_time=3),
+            Create(l1.submobjects[2], run_time=3),
+            Create(l1.submobjects[3], run_time=3),
+            Create(l2.submobjects[0], run_time=3),
+            Create(l2.submobjects[1], run_time=3),
+            Create(l2.submobjects[2], run_time=3),
+            Create(l3.submobjects[0], run_time=3),
+            Create(l3.submobjects[1], run_time=3),
+            Create(l4.submobjects[0], run_time=3), lag_ratio=0.07))
+        self.wait(1.5)
+        self.play(FadeOut(l1, l2, l3, l4, t1))
         self.wait(3)
 
 class Scene1(Scene):
